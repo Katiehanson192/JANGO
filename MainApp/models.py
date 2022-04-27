@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 
 # Create your models here.
@@ -15,5 +16,9 @@ class Entry(models.Model): #associate Entry w/ many models??  #one topic can hav
     date_added = models.DateTimeField(auto_now_add=True)
 
 
+    class Meta:
+        verbose_name_plural = 'entries'
+
     def __str__(self):
         return f"{self.text[:50]}" #returns first 50 characters of the entry in the text field
+                            #whenever you call this method, everything it returns will be a string
