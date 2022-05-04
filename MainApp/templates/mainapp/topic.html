@@ -16,11 +16,16 @@ e = object
         {% for e in entries %}
         <p>{{e.text }}</p>
         <p>{{e.date_added}}</p>
+        <p><a href="{% url 'MainApp:edit_entry' e.id %}">Edit entry</a></p>
+        <!--adding a link to edit the entries-->
     </li>
     {% empty %}
     <li> There are no entries for this topic yet.
     </li>
     {% endfor %}
 </ul>
+
+<p><a href="{% url 'MainApp:new_entry' topic.id %}">Add new entry</a></p>
+<!--adding a new entry button after user has clicked into topic page-->
 
 {% endblock content %}

@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('MainApp.urls')), #for homepage, include all URLs in the MainApp project?
+    path('users/', include('users.urls')),
 ]

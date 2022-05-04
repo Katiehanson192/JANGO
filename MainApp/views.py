@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import TopicForm
+from .forms import EntryForm, TopicForm
 from MainApp.forms import TopicForm
 
 
-from .models import Topic
+from .models import Topic, Entry
 # Create your views here.
 #Homepage
 
@@ -43,3 +43,38 @@ def new_topic(request):
     return render(request, 'MainApp/new_topic.html', context)
 
 
+def new_entry(request,topic_id): #need topic_id so it knows which topic to link the new entry to
+                                #topic_id in () = 1,2,3... int object
+    topic = Topic.objects.get(id=topic_id) #this is the topic OBJECT 
+    #load entry based on post or get request
+    if request.method != 'POST':
+        form = EntryForm()
+    else:
+        form = EntryForm(data=request.POST)
+
+        if form.is_valid():
+            new_entry = form.save(commit=False) #form will only store: topic, text, & date added (automatic)
+                                                #commit=False --> saves new entry object ready to write to DB, but doesn't actually save to DB yet
+                                                #need to assign topic attribute before adding to DB
+            new_entry.topic =  topic #line 47 is how we're getting the topic_id. assigning the topic to new_entry object
+            new_entry.save()
+            return redirect('MainApp:topic', topic_id=topic_id) #topic_id = defined in url file, 2nd topic_id = defined in line 47 (not the object, the int #?)
+
+    context = {'form':form, 'topic':topic}
+    return render(request, 'MainApp/new_entry.html', context)
+
+
+def edit_entry(request, entry_id):
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic #how to get the associated topic on the entry we're editing. lower case b/c referring to the variable
+
+    if request.method !='POST':
+        form = EntryForm(instance=entry) #need the specific entry instance, not a new entry. instance = entry object in line 68.
+    else:
+        form = EntryForm(instance=entry, data=request.POST) #post request = saving. want to save it to same entry, so instance = entry
+        if form.is_valid():
+            form.save()
+            return redirect('MainApp:topic', topic_id=topic.id) 
+
+    context = {'form':form, 'topic':topic, 'entry':entry}
+    return render(request, 'MainApp/edit_entry.html', context)

@@ -33,6 +33,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     #my apps
     'MainApp',
+    'users',
+    #third party apps
+    #'bootstrap4', check if this needs to be in here!
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
